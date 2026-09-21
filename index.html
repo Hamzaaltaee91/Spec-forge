@@ -1,0 +1,1344 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+html{color-scheme:light dark}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<title>Spec Sheet Forge</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ui:"Alexandria",system-ui,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --bg:#EDEFF2; --card:#FFFFFF; --surf:#F6F8FA; --surf2:#EEF1F5;
+  --ink:#131A26; --ink2:#3A465A; --muted:#78879C;
+  --line:#E2E7ED; --line2:#CBD4DE;
+  --brand:#2A4480; --brand-soft:#EDF1FA; --brand-ring:rgba(42,68,128,.16); --on-brand:#FFFFFF;
+  --rust:#A9521A; --rust-soft:#FBEDE2;
+  --sh:0 1px 2px rgba(19,26,38,.05), 0 12px 28px -18px rgba(19,26,38,.30);
+  --tick:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.6 8.4l2.9 2.9 5.9-6.8' fill='none' stroke='%23fff' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --bg:#0D1014; --card:#161A20; --surf:#1B2028; --surf2:#20262F;
+  --ink:#E8ECF1; --ink2:#BFC9D6; --muted:#7E8C9E;
+  --line:#242B34; --line2:#333D49;
+  --brand:#7E9EE0; --brand-soft:#1A2230; --brand-ring:rgba(126,158,224,.22); --on-brand:#0D1014;
+  --rust:#D99757; --rust-soft:#2A2016;
+  --sh:0 1px 2px rgba(0,0,0,.4), 0 14px 32px -20px rgba(0,0,0,.8);
+  --tick:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.6 8.4l2.9 2.9 5.9-6.8' fill='none' stroke='%230D1014' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}}
+:root[data-theme="dark"]{
+  --bg:#0D1014; --card:#161A20; --surf:#1B2028; --surf2:#20262F;
+  --ink:#E8ECF1; --ink2:#BFC9D6; --muted:#7E8C9E;
+  --line:#242B34; --line2:#333D49;
+  --brand:#7E9EE0; --brand-soft:#1A2230; --brand-ring:rgba(126,158,224,.22); --on-brand:#0D1014;
+  --rust:#D99757; --rust-soft:#2A2016;
+  --sh:0 1px 2px rgba(0,0,0,.4), 0 14px 32px -20px rgba(0,0,0,.8);
+  --tick:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.6 8.4l2.9 2.9 5.9-6.8' fill='none' stroke='%230D1014' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:300 15px/1.7 var(--ui);-webkit-font-smoothing:antialiased}
+.m{font-family:var(--mono);font-feature-settings:"tnum" 1}
+.app{max-width:880px;margin:0 auto;padding-inline:16px;padding-block:22px 56px}
+
+/* header */
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:11px;min-width:0}
+.mark{width:34px;height:34px;border-radius:10px;background:var(--brand);flex:0 0 auto;display:grid;place-items:center}
+.mark svg{width:17px;height:17px;display:block}
+.brand h1{margin:0;font-size:16px;font-weight:600;letter-spacing:-.01em}
+.brand p{margin:0;font-size:12px;color:var(--muted);font-weight:300;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prog{display:flex;align-items:center;gap:10px;flex:0 1 210px;min-width:130px}
+.track{flex:1;height:5px;background:var(--line);border-radius:99px;overflow:hidden}
+.track i{display:block;height:100%;background:var(--brand);border-radius:99px;width:0;min-width:10px;transition:width .4s cubic-bezier(.3,.9,.3,1)}
+.prog span{font-size:11.5px;color:var(--muted);white-space:nowrap}
+
+/* steps */
+.steps{display:flex;gap:6px;overflow-x:auto;padding-bottom:14px;scrollbar-width:none}
+.steps::-webkit-scrollbar{display:none}
+.steps button{
+  flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;height:33px;padding:0 12px;
+  border:1px solid var(--line);border-radius:11px;background:var(--card);color:var(--muted);
+  font:400 12.5px var(--ui);cursor:pointer;transition:.16s;
+}
+.steps button:hover{color:var(--ink2);border-color:var(--line2)}
+.steps button .n{font-family:var(--mono);font-size:11px}
+.steps button .t{display:none}
+.steps button.done{color:var(--brand);border-color:var(--brand-soft);background:var(--brand-soft)}
+.steps button[aria-current="true"]{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
+.steps button[aria-current="true"] .t{display:inline}
+
+/* card */
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--sh);overflow:hidden}
+.card-h{padding:22px 24px 4px}
+.card-h h2{margin:0;font-size:21px;font-weight:600;letter-spacing:-.015em}
+.card-h p{margin:5px 0 0;font-size:12.5px;color:var(--rust);font-weight:400}
+.card-b{padding:6px 24px 18px}
+.bar{display:flex;gap:10px;align-items:center;padding:15px 24px;background:var(--surf);border-top:1px solid var(--line);flex-wrap:wrap}
+.bar .fill{margin-inline-start:auto;font-size:12.5px;color:var(--muted)}
+
+/* question */
+.q{padding:19px 0;border-top:1px solid var(--line)}
+.q:first-child{border-top:0;padding-top:14px}
+.q h3{margin:0;font-size:16px;font-weight:500;letter-spacing:-.01em}
+.q .hint{margin:3px 0 0;font-size:12.5px;color:var(--muted);line-height:1.6}
+.q .ctl{margin-top:12px}
+
+/* options */
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.opt{position:relative;min-width:0}
+.opt input{position:absolute;inset:0;width:100%;height:100%;opacity:0;margin:0;cursor:pointer}
+.opt>span{
+  display:flex;align-items:center;gap:10px;height:100%;padding:11px 13px;
+  border:1px solid var(--line);border-radius:12px;background:var(--surf);
+  color:var(--ink2);font-size:14px;line-height:1.5;cursor:pointer;transition:.14s;
+}
+.opt>span::before{
+  content:"";flex:0 0 auto;width:18px;height:18px;border:1.5px solid var(--line2);
+  border-radius:6px;background-size:15px;background-position:center;background-repeat:no-repeat;transition:.14s;
+}
+.opt.r>span::before{border-radius:50%}
+.opt>span:hover{border-color:var(--line2);background:var(--surf2)}
+.opt input:checked+span{border-color:var(--brand);background:var(--brand-soft);color:var(--ink);font-weight:400}
+.opt input:checked+span::before{background-color:var(--brand);border-color:var(--brand);background-image:var(--tick)}
+.opt input:focus-visible+span{outline:none;box-shadow:0 0 0 3px var(--brand-ring)}
+.sw{display:inline-flex;gap:3px;flex:0 0 auto}
+.sw i{width:13px;height:13px;border-radius:4px;display:block;box-shadow:inset 0 0 0 1px rgba(0,0,0,.14)}
+
+/* inputs */
+.in{
+  width:100%;max-width:440px;padding:11px 14px;border:1px solid var(--line2);border-radius:12px;
+  background:var(--surf);color:var(--ink);font:300 14.5px var(--ui);
+}
+.in:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-ring)}
+::placeholder{color:var(--muted);opacity:.85}
+.add{display:flex;gap:7px;margin-top:9px;max-width:440px}
+.add .in{flex:1;padding:8px 12px;font-size:13.5px}
+.addb{
+  border:1px dashed var(--line2);background:transparent;color:var(--muted);
+  border-radius:11px;padding:8px 14px;font:400 13px var(--ui);cursor:pointer;white-space:nowrap;transition:.14s;
+}
+.addb:hover{color:var(--brand);border-color:var(--brand)}
+
+/* buttons */
+.btn{border-radius:12px;padding:11px 20px;font:500 14px var(--ui);cursor:pointer;border:1px solid transparent;transition:.15s}
+.btn.p{background:var(--brand);color:var(--on-brand)}
+.btn.p:hover{filter:brightness(1.1)}
+.btn.g{background:var(--card);border-color:var(--line2);color:var(--ink2)}
+.btn.g:hover{background:var(--surf2)}
+.btn:focus-visible{outline:none;box-shadow:0 0 0 3px var(--brand-ring)}
+
+/* findings */
+.fi{display:flex;gap:12px;align-items:flex-start;padding:15px 0;border-top:1px solid var(--line)}
+.fi:first-child{border-top:0}
+.fi .ic{width:25px;height:25px;border-radius:8px;flex:0 0 auto;display:grid;place-items:center;font:600 13px var(--mono)}
+.fi.hard .ic{background:var(--rust-soft);color:var(--rust)}
+.fi.soft .ic{background:var(--surf2);color:var(--muted)}
+.fi p{margin:0;flex:1 1 auto;min-width:0;font-size:14px;line-height:1.65;color:var(--ink2)}
+.fi .go{flex:0 0 auto;border:1px solid var(--line2);background:var(--card);color:var(--muted);border-radius:9px;font:400 12px var(--ui);padding:5px 10px;cursor:pointer}
+.fi .go:hover{color:var(--brand);border-color:var(--brand)}
+.clean{padding:34px 0 26px;text-align:center}
+.clean .ok{width:46px;height:46px;border-radius:14px;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;margin:0 auto 12px;font-size:21px}
+.clean p{margin:0;color:var(--muted);font-size:14px}
+
+/* output */
+.out{display:grid;grid-template-columns:212px 1fr}
+.olist{border-inline-end:1px solid var(--line);background:var(--surf);padding:10px;max-height:540px;overflow:auto}
+.olist .grp{font:500 9.5px var(--mono);letter-spacing:.14em;color:var(--muted);padding:12px 9px 6px;text-transform:uppercase}
+.olist .grp:first-child{padding-top:3px}
+.olist button{
+  display:block;width:100%;text-align:start;direction:ltr;padding:7px 10px;margin-bottom:2px;
+  border:0;border-radius:9px;background:transparent;color:var(--muted);
+  font:400 11.5px var(--mono);cursor:pointer;transition:.12s;
+}
+.olist button:hover{background:var(--surf2);color:var(--ink2)}
+.olist button[aria-current="true"]{background:var(--brand);color:var(--on-brand)}
+.opane{min-width:0;display:flex;flex-direction:column}
+.ohead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.ohead .fn{font:500 13px var(--mono);direction:ltr;color:var(--rust);min-width:0;overflow:hidden;text-overflow:ellipsis}
+pre.out{
+  margin:0;padding:16px 18px;direction:ltr;text-align:left;background:var(--card);color:var(--ink2);
+  font:400 11.5px/1.8 var(--mono);white-space:pre;overflow-x:auto;
+  max-height:470px;overflow:auto;flex:1;
+}
+@media (max-width:720px){
+  .out{grid-template-columns:1fr}
+  .olist{border-inline-end:0;border-bottom:1px solid var(--line);max-height:132px;display:flex;gap:5px;overflow-x:auto;padding:9px}
+  .olist .grp{display:none}
+  .olist button{width:auto;flex:0 0 auto;margin:0;white-space:nowrap}
+}
+
+.seg{display:inline-flex;background:var(--surf2);border:1px solid var(--line);border-radius:11px;padding:3px;gap:3px}
+.seg button{border:0;background:transparent;color:var(--muted);border-radius:8px;padding:7px 14px;font:500 13px var(--ui);cursor:pointer;transition:.14s}
+.seg button:hover{color:var(--ink2)}
+.seg button[aria-current="true"]{background:var(--card);color:var(--brand);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+
+/* panels */
+.panel{border-top:1px solid var(--line);background:var(--surf);padding:16px 24px}
+.panel h4{margin:0 0 4px;font-size:13.5px;font-weight:600}
+.panel p{margin:0;font-size:13px;color:var(--muted);line-height:1.65}
+.panel ol{margin:8px 0 0;padding-inline-start:19px;font-size:13.5px;color:var(--ink2);line-height:1.9}
+.panel code{font:400 12px var(--mono);background:var(--surf2);padding:2px 6px;border-radius:5px;color:var(--rust);direction:ltr;display:inline-block}
+textarea.io{
+  width:100%;height:96px;margin-top:10px;padding:11px;border:1px solid var(--line2);border-radius:11px;
+  background:var(--card);color:var(--ink2);font:400 11px var(--mono);direction:ltr;resize:vertical;
+}
+textarea.io:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-ring)}
+.toast{
+  position:fixed;inset-block-end:calc(20px + env(safe-area-inset-bottom,0px));inset-inline-start:50%;
+  transform:translateX(50%) translateY(200%);background:var(--ink);color:var(--card);
+  padding:10px 20px;border-radius:99px;font:500 13px var(--ui);z-index:9;
+  box-shadow:0 8px 24px -8px rgba(0,0,0,.4);transition:transform .3s cubic-bezier(.2,.9,.3,1);
+}
+.toast.show{transform:translateX(50%) translateY(0)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:520px){
+  .card-h,.card-b,.bar,.panel{padding-inline:17px}
+  .opts{grid-template-columns:1fr}
+  .bar .btn{flex:1 1 auto}
+}
+</style>
+
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <span class="mark"><svg viewBox="0 0 20 20" fill="none"><path d="M3 5.5h14M3 10h9M3 14.5h11" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/></svg></span>
+      <div style="min-width:0">
+        <h1>مواصفات المشروع</h1>
+        <p id="sub"></p>
+      </div>
+    </div>
+    <div class="prog"><div class="track"><i id="pf"></i></div><span class="m" id="pn"></span></div>
+  </header>
+  <nav class="steps" id="idx" aria-label="الخطوات"></nav>
+  <main id="card"></main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite">تم النسخ</div>
+
+<script>
+document.documentElement.lang="ar"; document.documentElement.dir="rtl";
+const E=(s)=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const o=(v,l)=>({v:v,l:l||v});
+
+/* ============ PRESETS ============ */
+const P = {
+store:{ l:"متجر وتوصيل",
+ st:[o("new — order placed, not accepted yet","جديد — طلب لم يُقبل"),o("confirmed — accepted by staff","مؤكد — قبله الموظف"),o("preparing — being prepared","قيد التحضير"),o("out_for_delivery — with the driver","مع السائق"),o("delivered — handed to the customer","تم التسليم"),o("cancelled — stopped before delivery","ملغي")],
+ problems:[o("Orders arrive by phone and get lost","الطلبات تجي بالتلفون وتضيع"),o("No record of daily sales","ما عدنا سجل مبيعات يومي"),o("Customers keep asking where the order is","الزبون يسأل وين الطلب"),o("Stock counts do not match reality","المخزون ما يطابق الواقع"),o("Drivers are dispatched manually","توزيع السائقين يدوي")],
+ v1:[o("Browse products by category","تصفح المنتجات حسب القسم"),o("Search products","بحث عن منتج"),o("Cart and checkout","سلة وإتمام طلب"),o("Order status tracking","تتبع حالة الطلب"),o("Saved delivery addresses","عناوين توصيل محفوظة"),o("Staff screen to accept and update orders","شاشة الموظف للطلبات"),o("Admin management of products and stock","إدارة المنتجات والمخزون")],
+ next:[o("Loyalty points","نقاط ولاء"),o("Discount coupons","كوبونات خصم"),o("Product reviews","تقييم المنتجات"),o("Scheduled delivery slots","مواعيد توصيل محددة"),o("In-app support chat","محادثة دعم")],
+ out:[o("Online payment gateway","بوابة دفع إلكتروني"),o("Multiple independent sellers","بائعين متعددين"),o("Multi-currency","عملات متعددة"),o("Returns and refunds workflow","مسار إرجاع واسترداد")],
+ ent:[o("users: id, full_name, phone, role, created_at","المستخدمون"),o("categories: id, name_ar, sort_order","الأقسام"),o("products: id, name_ar, price_minor, stock, category_id, image_url","المنتجات"),o("orders: id, user_id, status, total_minor, address_id, driver_id, created_at","الطلبات"),o("order_items: id, order_id, product_id, qty, unit_price_minor","عناصر الطلب"),o("addresses: id, user_id, label, area, details, lat, lng","العناوين")],
+ scr:[o("Login — phone and password","الدخول"),o("Home — categories and offers","الرئيسية"),o("Category — product list","قائمة القسم"),o("Product detail","تفاصيل المنتج"),o("Cart","السلة"),o("Checkout — address and confirm","إتمام الطلب"),o("My orders — list with status","طلباتي"),o("Order detail — status timeline","تفاصيل الطلب"),o("Staff — incoming orders","الموظف: الطلبات"),o("Admin — products and stock","المدير: المخزون")],
+ flow:[o("Open the app","يفتح التطبيق"),o("Pick a category","يختار قسم"),o("Add items to the cart","يضيف للسلة"),o("Choose a delivery address","يختار العنوان"),o("Place the order","يأكد الطلب"),o("Follow the status until delivered","يتابع لحد التسليم")],
+ notify:[o("Order status changed","تغيّرت حالة الطلب"),o("A driver was assigned","تعيّن سائق"),o("New order received (staff)","طلب جديد للموظف"),o("Stock is running low (admin)","المخزون قارب النفاد")],
+ succ:[o("50 orders a day handled without a phone call","50 طلب يومياً بدون تلفون"),o("Placing an order takes under 2 minutes","الطلب أقل من دقيقتين"),o("A sales report is available every evening","تقرير مبيعات كل مساء")],
+ must:[o("A customer can register, order, and see the status change","الزبون يسجل ويطلب ويشوف الحالة"),o("A placed order reaches the staff screen within 5 seconds","الطلب يوصل الموظف خلال 5 ثواني"),o("Stock decreases when an order is confirmed","المخزون ينقص عند التأكيد"),o("Cancelling an order returns the stock","الإلغاء يرجع المخزون")]},
+
+booking:{ l:"حجوزات ومواعيد",
+ st:[o("requested — waiting for confirmation","مطلوب — بانتظار التأكيد"),o("confirmed — the slot is held","مؤكد — الوقت محجوز"),o("attended — the customer arrived","حضر"),o("no_show — the customer did not arrive","لم يحضر"),o("cancelled — cancelled by either side","ملغي")],
+ problems:[o("Appointments are booked over WhatsApp and double-booked","الحجز بالواتساب ويتكرر"),o("No reminder, so customers do not show up","ما يوجد تذكير فيتخلف الزبون"),o("Staff cannot see their day at a glance","الموظف ما يشوف جدوله"),o("No record of who came and who cancelled","ما عدنا سجل حضور وإلغاء")],
+ v1:[o("Browse services and prices","تصفح الخدمات والأسعار"),o("Pick a date and an available slot","اختيار يوم ووقت متاح"),o("Confirm and cancel a booking","تأكيد وإلغاء الحجز"),o("Staff daily calendar","جدول الموظف اليومي"),o("Automatic reminder before the appointment","تذكير قبل الموعد"),o("Admin management of services and working hours","إدارة الخدمات وساعات العمل")],
+ next:[o("Recurring appointments","مواعيد متكررة"),o("Waiting list for full days","قائمة انتظار"),o("Customer rating after the visit","تقييم بعد الزيارة"),o("Deposit to hold a slot","عربون لحجز الموعد")],
+ out:[o("Online payment","دفع إلكتروني"),o("Video consultations","استشارة فيديو"),o("Multi-branch scheduling","جدولة عدة فروع")],
+ ent:[o("users: id, full_name, phone, role, created_at","المستخدمون"),o("services: id, name_ar, duration_min, price_minor, active","الخدمات"),o("staff: id, user_id, service_ids, working_hours","الموظفون"),o("bookings: id, user_id, staff_id, service_id, starts_at, status","الحجوزات"),o("blocked_slots: id, staff_id, starts_at, ends_at, reason","أوقات محجوبة")],
+ scr:[o("Login","الدخول"),o("Services list","قائمة الخدمات"),o("Calendar — pick a day","التقويم"),o("Slot picker","اختيار الوقت"),o("Booking confirmation","تأكيد الحجز"),o("My bookings","حجوزاتي"),o("Staff — today's schedule","الموظف: جدول اليوم"),o("Admin — services and hours","المدير: الخدمات")],
+ flow:[o("Open the app","يفتح التطبيق"),o("Pick a service","يختار خدمة"),o("Pick a day and a free slot","يختار يوم ووقت"),o("Confirm the booking","يأكد الحجز"),o("Receive a reminder before the appointment","يستلم تذكير"),o("Arrive and get marked as attended","يحضر ويُسجّل")],
+ notify:[o("Booking confirmed","تم تأكيد الحجز"),o("Reminder 24 hours before","تذكير قبل 24 ساعة"),o("Booking cancelled by either side","إلغاء من أي طرف"),o("New booking received (staff)","حجز جديد للموظف")],
+ succ:[o("No double bookings in a full month","شهر كامل بدون حجز مزدوج"),o("No-shows drop by half","التخلف عن الموعد ينزل للنصف"),o("Booking takes under 1 minute","الحجز أقل من دقيقة")],
+ must:[o("Two customers cannot book the same slot","ما يقدرون اثنين يحجزون نفس الوقت"),o("Cancelling frees the slot immediately","الإلغاء يحرر الوقت فوراً"),o("A reminder is sent at the right local time","التذكير يوصل بالتوقيت الصحيح")]},
+
+dashboard:{ l:"لوحة تقارير داخلية",
+ st:[o("draft — entered, not submitted","مسودة"),o("submitted — waiting for review","مرسل للمراجعة"),o("approved — counted in the reports","معتمد"),o("rejected — sent back for correction","مرفوض")],
+ problems:[o("Numbers are collected by hand into Excel every day","الأرقام تنجمع يدوي بإكسل"),o("Each department reports a different figure","كل قسم يطلع رقم مختلف"),o("Management sees the data days late","الإدارة تشوف البيانات متأخرة"),o("No history to compare against","ما عدنا تاريخ للمقارنة")],
+ v1:[o("Login restricted to company accounts","دخول مقيّد بحسابات الشركة"),o("Overview page with the main indicators","صفحة مؤشرات رئيسية"),o("Filter by date range and by site","فلترة بالتاريخ والموقع"),o("Detail table with sorting","جدول تفصيلي مع فرز"),o("Export the current view to Excel","تصدير للإكسل"),o("Manual data entry screen for missing days","إدخال يدوي للأيام الناقصة")],
+ next:[o("Scheduled email report","تقرير بالإيميل مجدول"),o("Threshold alerts","تنبيهات عند تجاوز حد"),o("Comparison with last year","مقارنة مع السنة الماضية"),o("Saved custom views","عروض محفوظة")],
+ out:[o("Public access without login","وصول عام بدون دخول"),o("Editing historical records","تعديل السجلات التاريخية"),o("Mobile app","تطبيق موبايل")],
+ ent:[o("users: id, full_name, email, role, department","المستخدمون"),o("sites: id, name_ar, region, active","المواقع"),o("metrics: id, site_id, metric_key, value, recorded_at","القياسات"),o("targets: id, site_id, metric_key, target_value, period","الأهداف"),o("imports: id, source, rows_count, imported_by, created_at","عمليات الاستيراد")],
+ scr:[o("Login","الدخول"),o("Overview — key indicators","المؤشرات الرئيسية"),o("Detail table","الجدول التفصيلي"),o("Site detail","تفاصيل الموقع"),o("Data entry","الإدخال اليدوي"),o("Admin — users and sites","المدير: المستخدمون والمواقع")],
+ flow:[o("Sign in with a company account","يدخل بحساب الشركة"),o("Land on the overview","تفتح صفحة المؤشرات"),o("Filter by date range and site","يفلتر بالتاريخ والموقع"),o("Open the detail table","يفتح الجدول"),o("Export the view to Excel","يصدّر للإكسل")],
+ notify:[o("A metric crossed its threshold","مؤشر تجاوز الحد"),o("Yesterday's data is missing","بيانات أمس ناقصة"),o("Scheduled report is ready","التقرير المجدول جاهز")],
+ succ:[o("Management checks the dashboard instead of asking for Excel files","الإدارة تفتح اللوحة بدل ما تطلب إكسل"),o("Yesterday's numbers are visible every morning","أرقام أمس تظهر كل صباح"),o("One agreed figure per indicator","رقم واحد متفق عليه لكل مؤشر")],
+ must:[o("Filters change every number on the page consistently","الفلتر يغيّر كل الأرقام بانسجام"),o("Export matches exactly what is on screen","التصدير يطابق الشاشة"),o("A user only sees the sites they are allowed to see","المستخدم يشوف مواقعه فقط")]},
+
+field:{ l:"عمل ميداني وصيانة",
+ st:[o("open — created, not assigned","مفتوح — غير مُسند"),o("assigned — given to a technician","مُسند لفني"),o("in_progress — work started","قيد التنفيذ"),o("closed — finished and accepted","مغلق ومقبول"),o("rejected — closure rejected by the supervisor","مرفوض من المشرف")],
+ problems:[o("Field reports are written on paper and lost","التقارير ورقية وتضيع"),o("No proof the technician visited the site","ما يوجد إثبات للزيارة"),o("Photos are scattered across WhatsApp","الصور مبعثرة بالواتساب"),o("Work orders are assigned by phone call","توزيع المهام بالتلفون")],
+ v1:[o("Technician sees the work orders assigned to them","الفني يشوف مهامه"),o("Open a work order and fill a checklist","يفتح المهمة ويملأ قائمة فحص"),o("Attach photos from the site","يرفق صور من الموقع"),o("Capture location when closing the order","يسجل الموقع عند الإغلاق"),o("Work offline and sync later","يشتغل أوفلاين ويزامن لاحقاً"),o("Supervisor assigns and tracks orders","المشرف يوزع ويتابع")],
+ next:[o("Digital signature from the customer","توقيع الزبون"),o("Spare parts consumption","استهلاك قطع الغيار"),o("Preventive maintenance schedule","جدول صيانة وقائية"),o("Performance report per technician","تقرير أداء لكل فني")],
+ out:[o("Inventory management","إدارة المخزون"),o("Payroll","الرواتب"),o("Customer-facing app","تطبيق للزبون")],
+ ent:[o("users: id, full_name, phone, role, team_id","المستخدمون"),o("sites: id, name_ar, region, lat, lng","المواقع"),o("work_orders: id, site_id, assigned_to, status, priority, due_at","أوامر العمل"),o("checklists: id, work_order_id, item_key, result, note","قوائم الفحص"),o("attachments: id, work_order_id, file_path, taken_at, lat, lng","المرفقات")],
+ scr:[o("Login","الدخول"),o("My work orders — today","مهامي اليوم"),o("Work order detail","تفاصيل المهمة"),o("Checklist form","نموذج الفحص"),o("Camera and attachments","الكاميرا والمرفقات"),o("Supervisor — assign and track","المشرف: التوزيع والمتابعة")],
+ flow:[o("Sign in","يسجل الدخول"),o("See today's assigned orders","يشوف مهام اليوم"),o("Open one and read the details","يفتح مهمة"),o("Fill the checklist and attach photos","يملأ الفحص ويرفق صور"),o("Close the order with location captured","يغلق المهمة مع الموقع"),o("Data syncs when the connection returns","يزامن عند رجوع الإنترنت")],
+ notify:[o("A new order was assigned to you","انوكلت لك مهمة"),o("An order is overdue","مهمة متأخرة"),o("Supervisor rejected a closure","المشرف رفض الإغلاق")],
+ succ:[o("All field reports are digital within one month","كل التقارير رقمية خلال شهر"),o("Every closed order has a photo and a location","كل مهمة مغلقة بصورة وموقع"),o("Work orders are closed the same day","المهام تُغلق بنفس اليوم")],
+ must:[o("An order can be completed with no internet and syncs later","تُنجز بدون إنترنت وتزامن لاحقاً"),o("Photos keep their capture time and location","الصور تحتفظ بالوقت والموقع"),o("A technician cannot see another technician's orders","الفني ما يشوف مهام غيره")]},
+
+learning:{ l:"تعليم ودورات",
+ st:[o("enrolled — signed up","مسجّل"),o("in_progress — started the lessons","قيد الدراسة"),o("completed — finished everything","مكتمل"),o("dropped — stopped attending","منسحب")],
+ problems:[o("Course material is spread across WhatsApp groups","المواد مبعثرة بمجموعات واتساب"),o("No way to know who finished what","ما نعرف منو أكمل شنو"),o("Quizzes are corrected by hand","التصحيح يدوي"),o("Students lose the schedule","الطالب يضيع الجدول")],
+ v1:[o("Browse courses","تصفح الدورات"),o("Enroll in a course","التسجيل بدورة"),o("Watch lessons in order","متابعة الدروس بالترتيب"),o("Track progress per lesson","تتبع التقدم"),o("Take a quiz and see the score","اختبار ودرجة"),o("Instructor uploads lessons and quizzes","المدرّس يرفع الدروس")],
+ next:[o("Certificate on completion","شهادة إتمام"),o("Discussion under each lesson","نقاش تحت كل درس"),o("Live session scheduling","جدولة جلسات مباشرة"),o("Offline lesson download","تحميل الدروس للأوفلاين")],
+ out:[o("Paid subscriptions","اشتراكات مدفوعة"),o("Video hosting inside the app","استضافة الفيديو داخلياً"),o("Proctored exams","اختبارات مراقبة")],
+ ent:[o("users: id, full_name, email, role","المستخدمون"),o("courses: id, title_ar, description, instructor_id, published","الدورات"),o("lessons: id, course_id, title_ar, content_url, sort_order","الدروس"),o("enrollments: id, user_id, course_id, enrolled_at","التسجيلات"),o("progress: id, user_id, lesson_id, completed_at","التقدم"),o("quiz_results: id, user_id, lesson_id, score, taken_at","نتائج الاختبار")],
+ scr:[o("Login","الدخول"),o("Course catalogue","قائمة الدورات"),o("Course detail and lessons","تفاصيل الدورة"),o("Lesson player","عرض الدرس"),o("Quiz","الاختبار"),o("My progress","تقدّمي"),o("Instructor — manage a course","المدرّس: إدارة الدورة")],
+ flow:[o("Sign in","يسجل الدخول"),o("Browse the catalogue","يتصفح الدورات"),o("Enroll in a course","يسجل بدورة"),o("Complete lessons in order","يكمل الدروس"),o("Take the quiz","يقدم الاختبار"),o("See progress reach 100%","يوصل تقدمه 100%")],
+ notify:[o("A new lesson was published","نُشر درس جديد"),o("Quiz result is ready","نتيجة الاختبار جاهزة"),o("You have not studied for 3 days","ما درست من 3 أيام")],
+ succ:[o("70% of enrolled students finish the first course","70% يكملون الدورة الأولى"),o("All material lives in one place","كل المواد بمكان واحد"),o("Quizzes are corrected automatically","التصحيح تلقائي")],
+ must:[o("Progress is saved even if the app is closed mid-lesson","التقدم يُحفظ حتى لو سكّر التطبيق"),o("A student cannot skip to a locked lesson","ما يقدر يقفز لدرس مقفل"),o("Quiz answers cannot be read from the client","إجابات الاختبار ما تنقرأ من العميل")]},
+
+other:{ l:"مشروع آخر",
+ st:[o("new — created","جديد"),o("in_progress — being worked on","قيد العمل"),o("done — finished","منجز"),o("cancelled — stopped","ملغي")],
+ problems:[o("The current process is manual and slow","العملية الحالية يدوية وبطيئة"),o("Information is scattered and hard to find","المعلومات مبعثرة"),o("Mistakes are discovered too late","الأخطاء تنكشف متأخرة"),o("No single source of truth","ما يوجد مرجع واحد")],
+ v1:[o("Sign in and sign out","دخول وخروج"),o("List the main records","عرض السجلات"),o("Create a new record","إضافة سجل"),o("Edit and delete a record","تعديل وحذف"),o("Search and filter","بحث وفلترة"),o("Admin management of users","إدارة المستخدمين")],
+ next:[o("Export to Excel","تصدير للإكسل"),o("Notifications","إشعارات"),o("Activity history","سجل النشاط"),o("Bulk import","استيراد جماعي")],
+ out:[o("Payments","الدفع"),o("Public registration","تسجيل عام"),o("Third-party integrations","ربط أنظمة خارجية")],
+ ent:[o("users: id, full_name, email, role, created_at","المستخدمون"),o("records: id, user_id, title, status, created_at","السجلات"),o("attachments: id, record_id, file_path, created_at","المرفقات")],
+ scr:[o("Login","الدخول"),o("Records list","قائمة السجلات"),o("Record detail","تفاصيل السجل"),o("Create / edit form","نموذج الإضافة"),o("Settings","الإعدادات"),o("Admin — users","المدير: المستخدمون")],
+ flow:[o("Sign in","يسجل الدخول"),o("See the records list","يشوف القائمة"),o("Create a new record","يضيف سجل"),o("Edit it and save","يعدّل ويحفظ"),o("Find it again through search","يلاقيه بالبحث")],
+ notify:[o("A record was assigned to you","انوكل لك سجل"),o("A record changed status","تغيّرت حالة سجل")],
+ succ:[o("The manual process is fully replaced","العملية اليدوية تنستبدل"),o("Any record is found in under 10 seconds","أي سجل يُلاقى بأقل من 10 ثواني")],
+ must:[o("A user only sees records they are allowed to see","المستخدم يشوف المسموح له فقط"),o("Nothing is lost when the connection drops mid-save","ما يضيع شي إذا انقطع الاتصال")]}
+};
+
+const PALETTES=[
+ {v:"#1E3557|#B5761F", l:"حبر وعنبر"},
+ {v:"#0E7C6B|#E08A1E", l:"أخضر ونحاسي"},
+ {v:"#7A2E3F|#4C7A8C", l:"عنابي ورمادي أزرق"},
+ {v:"#2F5D3A|#C4692B", l:"زيتوني وبرتقالي"},
+ {v:"#243447|#6FA8A0", l:"رمادي داكن وفيروزي"},
+ {v:"#5B3A87|#D8A657", l:"بنفسجي وذهبي"},
+ {v:"#8A3B1E|#2C6E7A", l:"طيني وأزرق بحري"},
+ {v:"#111827|#7C8BA1", l:"أسود ورمادي"}
+];
+
+/* ============ SHEETS ============ */
+const S=[
+{c:"START", t:"البداية", out:"يغذّي كل الملفات", f:[
+ {id:"kind",t:"one",q:"نوع المشروع",h:"هذا الاختيار يعبّي أغلب الأسئلة الجاية تلقائياً.",o:Object.keys(P).map(k=>o(k,P[k].l)),d:0},
+ {id:"app_name",t:"text",q:"اسم المشروع",h:"بالإنكليزي — يدخل بالكود والمجلدات.",ph:"Amwary"},
+ {id:"one_liner",t:"text",q:"الفكرة بسطر واحد",h:"اختياري. اتركه فارغ ويتولد تلقائياً.",ph:"A grocery delivery app for neighborhood stores"},
+ {id:"platform",t:"one",q:"نوع المنتج",o:[o("Mobile app (Android + iOS)","تطبيق موبايل"),o("Web app","موقع ويب"),o("Mobile app + web dashboard","موبايل + لوحة ويب"),o("Internal web dashboard","لوحة داخلية")],d:0},
+ {id:"audience",t:"many",q:"المستخدم المستهدف",o:[o("Customers","زبائن"),o("Company employees","موظفي الشركة"),o("Store owners","أصحاب محلات"),o("Field technicians","فنيين ميدانيين"),o("Students","طلاب"),o("Managers","مدراء")],d:[0]}
+]},
+{c:"PRD", t:"النطاق والمتطلبات", out:"PRD · SPEC · REQUIREMENTS", f:[
+ {id:"problems",t:"bank",b:"problems",q:"المشاكل التي يحلها"},
+ {id:"v1",t:"bank",b:"v1",q:"ميزات النسخة الأولى",h:"شيل أي ميزة مو ضرورية — كل ميزة تصير متطلب مرقّم."},
+ {id:"next",t:"bank",b:"next",q:"ميزات مؤجلة للنسخة الثانية"},
+ {id:"out",t:"bank",b:"out",q:"خارج النطاق نهائياً"},
+ {id:"succ",t:"bank",b:"succ",q:"مقياس النجاح"}
+]},
+{c:"STACK", t:"التقنيات", out:"TECH_STACK", f:[
+ {id:"stack",t:"one",q:"الأساس التقني",o:[o("Flutter (Dart) + Supabase (Postgres)","Flutter + Supabase"),o("Next.js (TypeScript) + Supabase (Postgres)","Next.js + Supabase"),o("React Native (TypeScript) + Firebase","React Native + Firebase"),o("Next.js (TypeScript) + Postgres via Prisma","Next.js + Prisma"),o("Vue 3 + Laravel + MySQL","Vue + Laravel")],d:0},
+ {id:"auth",t:"many",q:"طرق تسجيل الدخول",o:[o("Email and password","إيميل وكلمة سر"),o("Google Sign-In","جوجل"),o("Apple Sign-In","آبل"),o("Phone OTP over SMS","رقم هاتف OTP"),o("Magic link","رابط سحري"),o("Guest browsing","تصفح كزائر")],d:[0,1]},
+ {id:"hosting",t:"one",q:"الاستضافة",o:[o("Supabase cloud + Vercel","Supabase + Vercel"),o("Supabase cloud + Netlify","Supabase + Netlify"),o("Firebase Hosting","Firebase"),o("Self-hosted VPS with Docker","سيرفر خاص"),o("App stores only","المتاجر فقط")],d:0},
+ {id:"state",t:"one",q:"إدارة الحالة",o:[o("Riverpod","Riverpod"),o("Provider","Provider"),o("Bloc / Cubit","Bloc"),o("Zustand + TanStack Query","Zustand + React Query"),o("Redux Toolkit","Redux Toolkit"),o("Framework default, no extra library","الافتراضي بدون مكتبة")],d:0},
+ {id:"langs",t:"one",q:"لغة الواجهة",o:[o("Arabic only, RTL layout","عربي فقط RTL"),o("English only, LTR layout","إنكليزي فقط"),o("Arabic and English, RTL and LTR","عربي وإنكليزي")],d:0},
+ {id:"api",t:"one",q:"نمط الوصول للبيانات",o:[o("The client talks to the database directly through the SDK, protected by row level security","مباشرة عبر SDK محمي بـ RLS"),o("The client only calls server functions; no direct table access","دوال سيرفر فقط"),o("A custom REST API in front of the database","REST API مخصص"),o("GraphQL API","GraphQL")],d:0},
+ {id:"integ",t:"many",q:"خدمات مطلوبة",o:[o("Push notifications","إشعارات"),o("Payments","دفع إلكتروني"),o("Maps and location","خرائط وموقع"),o("Image and file upload","رفع صور وملفات"),o("Excel or PDF export","تصدير إكسل أو PDF"),o("Transactional email","إيميل تلقائي"),o("Realtime updates","تحديث لحظي"),o("Offline mode with sync","أوفلاين مع مزامنة")],d:[0,3]},
+ {id:"constraints",t:"many",q:"قيود لازم يحترمها",o:[o("Must work on Android 8 and low-end phones","يشتغل على أندرويد 8 وأجهزة ضعيفة"),o("Must work on a slow or unstable connection","إنترنت بطيء أو متقطع"),o("Stay on free or low-cost tiers","يبقى على الباقات المجانية"),o("Arabic content must render correctly everywhere","العربي يظهر صح بكل مكان"),o("Data must stay in one region","البيانات تبقى بمنطقة واحدة")],d:[0,1,3]}
+]},
+{c:"DATA", t:"قاعدة البيانات", out:"DATA_MODEL", f:[
+ {id:"ent",t:"bank",b:"ent",q:"الجداول",h:"اضغط لإلغاء أي جدول ما تحتاجه، أو أضف جدول جديد."},
+ {id:"st",t:"bank",b:"st",q:"حالات السجل الرئيسي",h:"مثل حالة الطلب أو الحجز — تتحول لمخطط انتقالات في STATE_MACHINE."},
+ {id:"roles",t:"many",q:"أدوار المستخدمين",o:[o("admin","مدير النظام"),o("manager","مدير فرع"),o("staff","موظف"),o("driver","سائق"),o("technician","فني"),o("instructor","مدرّس"),o("customer","زبون"),o("viewer","مشاهد فقط")],d:[0,6]},
+ {id:"tenancy",t:"one",q:"هيكل الملكية",o:[o("Single organization","جهة واحدة"),o("Multi-tenant, data scoped per organization","عدة جهات منفصلة"),o("One organization with many sites or branches","فروع متعددة")],d:0},
+ {id:"rls",t:"one",q:"صلاحيات الوصول",o:[o("Row Level Security on every table","RLS على كل الجداول"),o("Row Level Security on user-owned tables only","RLS على جداول المستخدم فقط"),o("Server-side service role only, no direct client access","الوصول عبر السيرفر فقط")],d:0},
+ {id:"storage",t:"one",q:"تخزين الملفات",o:[o("No file storage","لا يوجد"),o("Images only","صور فقط"),o("Images and documents","صور ومستندات")],d:1},
+ {id:"audit",t:"one",q:"تتبع التغييرات",o:[o("created_at and updated_at columns","تواريخ فقط"),o("Soft delete with deleted_at","حذف ناعم"),o("Full audit log table for every write","سجل تدقيق كامل")],d:0}
+]},
+{c:"FLOWS", t:"الشاشات والمسارات", out:"USER_FLOWS", f:[
+ {id:"scr",t:"bank",b:"scr",q:"الشاشات"},
+ {id:"entry",t:"one",q:"أول مسار يفتح",o:[o("Splash → Login → Home","سبلاش ثم دخول"),o("Onboarding → Login → Home","شرح تعريفي ثم دخول"),o("Guest browsing, login only when needed","تصفح كزائر"),o("Straight to Home, no authentication","مباشرة للرئيسية")],d:0},
+ {id:"nav",t:"one",q:"شكل التنقل",o:[o("Bottom navigation bar","شريط سفلي"),o("Side drawer","قائمة جانبية"),o("Top tabs","تبويبات علوية"),o("Sidebar dashboard layout","شريط جانبي للوحة")],d:0},
+ {id:"flow",t:"bank",b:"flow",q:"المسار الأساسي",h:"بالترتيب — يصير سيناريو قبول في SPEC."},
+ {id:"states",t:"one",q:"حالات الشاشة",o:[o("Every screen handles loading, empty, error and success","كل الحالات إلزامية"),o("Loading and error only","تحميل وخطأ فقط")],d:0},
+ {id:"notify",t:"bank",b:"notify",q:"متى يصل إشعار"}
+]},
+{c:"DESIGN", t:"الهوية البصرية", out:"DESIGN_SYSTEM", f:[
+ {id:"pal",t:"pal",q:"لوحة الألوان",o:PALETTES,d:0},
+ {id:"mood",t:"one",q:"الطابع",o:[o("Minimal and clean","بسيط ونظيف"),o("Bold and colorful","جريء وملون"),o("Corporate and serious","رسمي وجاد"),o("Warm and friendly","دافئ وودود")],d:0},
+ {id:"font_ar",t:"one",q:"الخط العربي",o:[o("Cairo","Cairo"),o("IBM Plex Sans Arabic","IBM Plex Sans Arabic"),o("Tajawal","Tajawal"),o("Readex Pro","Readex Pro"),o("Noto Kufi Arabic","Noto Kufi Arabic")],d:0},
+ {id:"theme",t:"one",q:"الوضع الليلي",o:[o("Light and dark themes","فاتح وداكن"),o("Light only","فاتح فقط"),o("Dark only","داكن فقط")],d:0},
+ {id:"radius",t:"one",q:"انحناء الحواف",o:[o("4px — sharp","حاد"),o("12px — rounded","متوسط"),o("20px — very rounded","دائري")],d:1},
+ {id:"density",t:"one",q:"الكثافة",o:[o("Comfortable spacing","مريح"),o("Compact, data heavy","مضغوط للبيانات")],d:0}
+]},
+{c:"RULES", t:"قواعد الذكاء الاصطناعي", out:"CLAUDE", f:[
+ {id:"code_lang",t:"one",q:"لغة الكود",o:[o("All code, comments, file names and commit messages in English. Arabic only inside UI strings.","الكود إنكليزي والواجهة عربية"),o("Everything in English including UI strings","كل شيء إنكليزي")],d:0},
+ {id:"folders",t:"one",q:"هيكل المجلدات",o:[o("Feature-first — one folder per feature","حسب الميزة"),o("Layer-first — models, services, screens","حسب الطبقة"),o("Framework default","الافتراضي")],d:0},
+ {id:"flimit",t:"one",q:"حجم الملف",o:[o("Split any file over 300 lines","300 سطر"),o("Split any file over 500 lines","500 سطر"),o("No hard limit","بدون حد")],d:0},
+ {id:"tests",t:"one",q:"الاختبارات",o:[o("No automated tests","بدون اختبارات"),o("Unit tests for business logic only","للمنطق فقط"),o("Unit plus widget or component tests","منطق وواجهة"),o("Full coverage including end-to-end","تغطية كاملة")],d:1},
+ {id:"git",t:"many",q:"قواعد Git",o:[o("Small, single-purpose commits","كومِت صغير لكل تغيير"),o("Conventional Commits format","صيغة Conventional Commits"),o("One branch per feature","فرع لكل ميزة"),o("Never push directly to main","ممنوع الدفع لـ main"),o("Never force push","ممنوع force push")],d:[0,1,3,4]},
+ {id:"approval",t:"one",q:"قبل التطبيق",o:[o("Show the plan and the diff, then wait for approval before applying or pushing","اعرض الخطة وانتظر الموافقة"),o("Apply, then report what changed","طبّق ثم أخبرني")],d:0},
+ {id:"ask",t:"one",q:"عند الغموض",o:[o("Do not ask. Pick the simplest option that fits these documents and log it in ASSUMPTIONS.md","لا تسأل — اختر وسجّل الافتراض"),o("Ask only when the decision is hard to reverse","اسأل إذا القرار صعب التراجع"),o("Ask whenever anything is unclear","اسأل عند أي غموض")],d:0},
+ {id:"forbidden",t:"many",q:"ممنوع لمسه",o:[o("Secret files and environment values",".env والمفاتيح السرية"),o("Migrations that were already applied","المايكريشن المطبّق"),o("Generated files and build output","الملفات المولّدة"),o("Anything under a vendor or third-party folder","مجلدات الطرف الثالث"),o("CI and deployment configuration","إعدادات النشر")],d:[0,1,2]}
+]},
+{c:"SAFE", t:"الأمان والتشغيل", out:"SECURITY · ENV_SETUP", f:[
+ {id:"secrets",t:"one",q:"إدارة المفاتيح السرية",o:[o("All secrets in environment variables, never committed","بمتغيرات البيئة فقط"),o("Environment variables plus a secret manager in production","متغيرات + مدير أسرار بالإنتاج")],d:0},
+ {id:"session",t:"one",q:"الجلسة",o:[o("Session expires after 30 days of inactivity","تنتهي بعد 30 يوم خمول"),o("Session expires after 7 days","تنتهي بعد 7 أيام"),o("Session expires after 12 hours, for internal tools","تنتهي بعد 12 ساعة")],d:0},
+ {id:"pii",t:"many",q:"بيانات حساسة يخزنها",o:[o("Phone numbers","أرقام الهواتف"),o("Physical addresses","العناوين"),o("Location coordinates","إحداثيات الموقع"),o("Photos of people or property","صور"),o("None of the above","لا شيء مما سبق")],d:[0]},
+ {id:"ratelimit",t:"one",q:"الحماية من الإساءة",o:[o("Rate limit login and OTP endpoints","تحديد محاولات الدخول"),o("Rate limit every write endpoint","تحديد كل عمليات الكتابة"),o("No rate limiting for now","بدون تحديد حالياً")],d:0},
+ {id:"pkg",t:"one",q:"مدير الحزم",o:[o("pub (Flutter)","pub — Flutter"),o("npm","npm"),o("pnpm","pnpm"),o("yarn","yarn"),o("composer","composer")],d:0},
+ {id:"envs",t:"one",q:"البيئات",o:[o("Local and production only","محلي وإنتاج فقط"),o("Local, staging and production","محلي وتجريبي وإنتاج")],d:0}
+]},
+{c:"SHIP", t:"البناء والقبول", out:"BUILD_ORDER · ACCEPTANCE", f:[
+ {id:"chunk",t:"one",q:"حجم خطوة العمل",o:[o("One feature per step, then stop and report","ميزة واحدة ثم توقف"),o("One screen per step, end to end","شاشة واحدة كاملة"),o("One phase per step","مرحلة كاملة")],d:0},
+ {id:"dod",t:"many",q:"الميزة منجزة عندما",o:[o("It runs on a real device without crashing","تعمل على جهاز حقيقي"),o("No errors or warnings in the console","بدون أخطاء بالكونسول"),o("Loading, empty and error states are handled","كل الحالات معالجة"),o("Arabic RTL layout is correct with no clipped text","RTL سليم بدون قص"),o("It works on a slow connection","تعمل على إنترنت بطيء"),o("Linter and formatter pass","يمر الـ lint"),o("I reviewed and approved the change","راجعتها ووافقت")],d:[0,1,2,3,6]},
+ {id:"perf",t:"one",q:"هدف الأداء",o:[o("Cold start under 3s, screen transitions under 1s","فتح أقل من 3 ثواني"),o("Cold start under 2s, lists scroll at 60fps","سريع جداً 60fps"),o("Best effort, no strict target","بدون هدف محدد")],d:0},
+ {id:"must",t:"bank",b:"must",q:"اختبارات لازم تنجح"},
+ {id:"devices",t:"many",q:"الأجهزة المستهدفة",o:[o("Android 8 and newer","أندرويد 8 فما فوق"),o("iPhone 11 and newer","آيفون 11 فما فوق"),o("Chrome on desktop","كروم على الكمبيوتر"),o("Safari on iPhone","سفاري آيفون"),o("10-inch tablets","تابلت 10 إنش")],d:[0,1]},
+ {id:"launch",t:"one",q:"الموعد المستهدف",o:[o("A working version in 1 week","نسخة خلال أسبوع"),o("A working version in 2 weeks","نسخة خلال أسبوعين"),o("A working version in 1 month","نسخة خلال شهر"),o("No fixed date","بدون موعد")],d:[1],d2:1}
+]}
+];
+
+/* ============ STATE ============ */
+const KEY="spec-forge-v3";
+let V={}, sheet=0, tab=0;
+const brief=()=>V.brief!==false;
+try{const s=localStorage.getItem(KEY); if(s) V=JSON.parse(s)||{};}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(V));}catch(e){}}
+
+function bankList(f){ const k=V.kind||"store"; return (P[k]&&P[k][f.b])||[]; }
+function resetBanks(){
+  S.forEach(sh=>sh.f.forEach(f=>{
+    if(f.t!=="bank")return;
+    const list=bankList(f);
+    V[f.id+"_o"]=list.map(x=>[x.v,x.l]);
+    V[f.id]=list.map(x=>x.v);
+  }));
+}
+function initDefaults(force){
+  S.forEach(sh=>sh.f.forEach(f=>{
+    if(!force && V[f.id]!==undefined) return;
+    if(f.t==="one"||f.t==="pal") V[f.id]=f.o[f.d2!==undefined?f.d2:(f.d||0)].v;
+    else if(f.t==="many") V[f.id]=(Array.isArray(f.d)?f.d:[]).map(i=>f.o[i].v);
+    else if(f.t==="text") V[f.id]="";
+  }));
+}
+if(V.brief===undefined)V.brief=true;
+if(V.kind===undefined){ V.kind="store"; initDefaults(true); resetBanks(); }
+else initDefaults(false);
+S.forEach(sh=>sh.f.forEach(f=>{ if(f.t==="bank"&&!V[f.id+"_o"]){ const l=bankList(f); V[f.id+"_o"]=l.map(x=>[x.v,x.l]); V[f.id]=l.map(x=>x.v);} }));
+
+const sel=(id)=>Array.isArray(V[id])?V[id]:[];
+const one=(id)=>V[id]||"";
+
+/* ============ VIEW ============ */
+const card=document.getElementById("card"), idx=document.getElementById("idx");
+function answered(){let n=0;S.forEach(sh=>sh.f.forEach(f=>{const v=V[f.id];if(Array.isArray(v)?v.length:String(v||"").length)n++;}));return n;}
+function total(){let n=0;S.forEach(sh=>n+=sh.f.length);return n;}
+
+function renderTop(){
+  const d=Math.min(sheet,S.length);
+  document.getElementById("pf").style.width=Math.round(d/S.length*100)+"%";
+  document.getElementById("pn").textContent=sheet>S.length?"جاهز":sheet===S.length?"فحص":(sheet+1)+" من "+S.length;
+  document.getElementById("sub").textContent=(P[V.kind]||P.store).l+" · "+(V.app_name||"بلا اسم")+" · "+answered()+"/"+total()+" إجابة";
+}
+function renderSteps(){
+  idx.innerHTML="";
+  const mk=(n,t,i)=>{
+    const b=document.createElement("button"); b.type="button";
+    b.innerHTML='<span class="n">'+n+'</span><span class="t">'+t+'</span>';
+    if(sheet===i)b.setAttribute("aria-current","true"); else if(i<sheet)b.className="done";
+    b.onclick=()=>{sheet=i;render();}; idx.appendChild(b);
+  };
+  S.forEach((sh,i)=>mk(String(i+1).padStart(2,"0"),sh.t,i));
+  mk("✓","الفحص",S.length); mk("↓","الملفات",S.length+1);
+}
+
+function ctrl(f){
+  let b="";
+  const opt=(id,i,name,type,checked,inner,cls)=>
+    '<label class="opt'+(cls||"")+'"><input type="'+type+'" name="'+name+'" data-i="'+i+'" id="'+id+'"'+(checked?" checked":"")+'><span>'+inner+'</span></label>';
+  if(f.t==="text"){
+    b='<input class="in" dir="ltr" type="text" id="'+f.id+'" value="'+E(V[f.id]||"")+'" placeholder="'+E(f.ph||"")+'">';
+  } else if(f.t==="pal"){
+    b='<div class="opts">'+f.o.map((x,i)=>{const c=x.v.split("|");
+      return opt(f.id+"_"+i,i,f.id,"radio",one(f.id)===x.v,'<span class="sw"><i style="background:'+c[0]+'"></i><i style="background:'+c[1]+'"></i></span>'+E(x.l)," r");
+    }).join("")+'</div>';
+  } else if(f.t==="one"){
+    b='<div class="opts">'+f.o.map((x,i)=>opt(f.id+"_"+i,i,f.id,"radio",one(f.id)===x.v,E(x.l)," r")).join("")+'</div>';
+  } else if(f.t==="many"){
+    const a=sel(f.id);
+    b='<div class="opts">'+f.o.map((x,i)=>opt(f.id+"_"+i,i,f.id,"checkbox",a.indexOf(x.v)>-1,E(x.l))).join("")+'</div>';
+  } else if(f.t==="bank"){
+    const o2=V[f.id+"_o"]||[], a=sel(f.id);
+    b='<div class="opts">'+o2.map((x,i)=>opt(f.id+"_"+i,i,f.id,"checkbox",a.indexOf(x[0])>-1,E(x[1]))).join("")+'</div>'+
+      '<div class="add"><input class="in" dir="ltr" type="text" id="'+f.id+'_add" placeholder="أضف بند بالإنكليزي"><button class="addb" type="button" data-add="'+f.id+'">إضافة</button></div>';
+  }
+  return '<div class="q"><h3>'+f.q+'</h3>'+(f.h?'<p class="hint">'+f.h+'</p>':'')+'<div class="ctl">'+b+'</div></div>';
+}
+
+function bindFields(sh){
+  sh.f.forEach(f=>{
+    if(f.t==="text"){
+      const el=document.getElementById(f.id);
+      el.addEventListener("input",()=>{V[f.id]=el.value;save();renderTop();});
+    } else {
+      document.querySelectorAll('input[name="'+f.id+'"]').forEach(inp=>{
+        inp.addEventListener("change",()=>{
+          const i=+inp.dataset.i;
+          if(f.t==="one"||f.t==="pal"){ V[f.id]=f.o[i].v; if(f.id==="kind")resetBanks(); }
+          else if(f.t==="bank"){ const o2=V[f.id+"_o"]||[];
+            V[f.id]=Array.from(document.querySelectorAll('input[name="'+f.id+'"]:checked')).map(x=>o2[+x.dataset.i][0]); }
+          else { V[f.id]=Array.from(document.querySelectorAll('input[name="'+f.id+'"]:checked')).map(x=>f.o[+x.dataset.i].v); }
+          save(); renderTop();
+          if(f.id==="kind")renderSheet();
+        });
+      });
+    }
+  });
+  card.querySelectorAll("[data-add]").forEach(btn=>{
+    btn.onclick=()=>{
+      const id=btn.dataset.add, inp=document.getElementById(id+"_add"), t=inp.value.trim();
+      if(!t)return;
+      V[id+"_o"]=(V[id+"_o"]||[]).concat([[t,t]]);
+      V[id]=sel(id).concat([t]); save(); renderSheet();
+    };
+  });
+}
+
+function renderSheet(){
+  const sh=S[sheet];
+  card.innerHTML='<div class="card"><div class="card-h"><h2>'+sh.t+'</h2><p>'+sh.out+'</p></div>'+
+    '<div class="card-b">'+sh.f.map(ctrl).join("")+'</div>'+
+    '<div class="bar">'+(sheet>0?'<button class="btn g" id="bk" type="button">السابق</button>':'')+
+    '<button class="btn p" id="nx" type="button">'+(sheet===S.length-1?"فحص التناقضات":"التالي")+'</button>'+
+    '<span class="fill">الخطوة '+(sheet+1)+' من '+S.length+'</span></div></div>';
+  bindFields(sh);
+  const bk=document.getElementById("bk"); if(bk)bk.onclick=()=>{sheet--;render();};
+  document.getElementById("nx").onclick=()=>{sheet++;render();};
+}
+
+/* ============ GENERATORS ============ */
+const NAME=()=>V.app_name||"the project";
+const bl=(a,fb)=>a.length?a.map(s=>"- "+s).join("\n"):"- "+(fb||"TBD — confirm before building.");
+const nl=(a,fb)=>a.length?a.map((s,i)=>(i+1)+". "+s).join("\n"):"1. "+(fb||"TBD");
+const pal=()=>one("pal").split("|");
+const rad=()=>one("radius").split(" ")[0];
+const isFlutter=()=>one("stack").indexOf("Flutter")===0;
+const isSupa=()=>one("stack").indexOf("Supabase")>-1;
+const isFire=()=>one("stack").indexOf("Firebase")>-1;
+const primaryRole=()=>{const r=sel("roles").filter(x=>x!=="admin"); return r[0]||"user";};
+const ENK={store:"an online store with delivery",booking:"bookings and appointments",dashboard:"an internal reporting dashboard",field:"field operations and maintenance",learning:"courses and learning",other:"a custom internal tool"};
+const liner=()=>V.one_liner||((one("platform").indexOf("Mobile")===0?"A mobile app":"A web app")+" for "+(sel("audience")[0]||"users").toLowerCase()+" — "+(ENK[V.kind]||ENK.other)+".");
+
+function reqs(){
+  const r=[]; let n=0;
+  sel("v1").forEach(f=>{n++;r.push({id:"REQ-"+String(n).padStart(3,"0"),p:"Must",s:"The system shall provide: "+f+"."});});
+  sel("next").forEach(f=>{n++;r.push({id:"REQ-"+String(n).padStart(3,"0"),p:"Later",s:"The system shall provide: "+f+"."});});
+  const nf=[];
+  nf.push("The system shall restrict access to signed-in users via "+sel("auth").join(" or ")+".");
+  nf.push("The system shall enforce "+one("rls")+".");
+  nf.push("The system shall meet this performance target: "+one("perf")+".");
+  nf.push("The system shall render its interface as "+one("langs")+".");
+  if(sel("integ").indexOf("Offline mode with sync")>-1) nf.push("The system shall allow the primary flow to be completed without a network connection and sync afterwards.");
+  nf.push("The system shall keep every secret out of the repository ("+one("secrets")+").");
+  nf.forEach(s=>{n++;r.push({id:"REQ-"+String(n).padStart(3,"0"),p:"Must",s:s});});
+  return r;
+}
+
+function pairsOf(id){const opts=V[id+"_o"]||[];return sel(id).map(v=>{const f=opts.find(x=>x[0]===v);return {v:v,l:f?f[1]:v};});}
+function labMany(sid,v){const sh=S.find(x=>x.f.some(f=>f.id===sid));if(!sh)return v;const f=sh.f.find(f=>f.id===sid);const o=(f.o||[]).find(x=>x.v===v);return o?o.l:v;}
+const skey=(v)=>String(v).split("—")[0].split(" ")[0].trim();
+const isTerm=(v)=>/cancel|reject|no_show|dropped|refus/i.test(v);
+function chain(){const a=sel("st");return {live:a.filter(x=>!isTerm(x)),term:a.filter(isTerm)};}
+const arabicUI=[["save","حفظ","Save"],["cancel","إلغاء","Cancel"],["delete","حذف","Delete"],["edit","تعديل","Edit"],["add","إضافة","Add"],["search","بحث","Search"],["retry","إعادة المحاولة","Retry"],["loading","جاري التحميل","Loading"],["empty_list","لا توجد بيانات بعد","No data yet"],["error_generic","صار خطأ، حاول مرة ثانية","Something went wrong"],["no_internet","لا يوجد اتصال بالإنترنت","No internet connection"],["login","تسجيل الدخول","Sign in"],["logout","تسجيل الخروج","Sign out"],["confirm_delete","تريد حذفه؟","Delete this?"],["required_field","هذا الحقل مطلوب","This field is required"],["saved","تم الحفظ","Saved"],["back","رجوع","Back"],["next","التالي","Next"],["done","تم","Done"],["settings","الإعدادات","Settings"]];
+const FILES={
+"CLAUDE.md":()=>
+`# Working Rules — ${NAME()}
+
+Read every file in \`docs/\` before writing code. \`docs/SPEC.md\` and \`docs/REQUIREMENTS.md\` decide what to build; this file decides how.
+
+## Language
+${one("code_lang")}
+
+## Structure
+- ${one("folders")}
+- ${one("flimit")}
+- One responsibility per file. Extract a shared component the second time it is used.
+
+## Work size
+${one("chunk")}
+
+## Before changing anything
+${one("approval")}
+
+## When something is unclear
+${one("ask")}
+
+## Testing
+${one("tests")}
+
+## Git
+${bl(sel("git"))}
+
+## Never touch
+${bl(sel("forbidden"))}
+
+## Context protocol — read this before opening any other file
+1. Start every session by reading \`PROGRESS.md\` only. It says what is done, what is next, and which files this phase needs.
+2. Open only the files listed under "Read list" in PROGRESS.md. Do not re-read the whole \`docs/\` folder — it was read once, on day one.
+3. Finish every task by updating PROGRESS.md (Now, Next, Done) in the same commit as the code.
+4. If PROGRESS.md and the code disagree, the code is right: fix PROGRESS.md and say so.
+5. Never summarise the whole project back to me. Report the task only.
+
+## Loop for every task
+1. Name the requirement ID from REQUIREMENTS.md you are working on.
+2. List the files you will touch.
+3. Make the smallest change that satisfies it.
+4. Run it and verify against ACCEPTANCE.md.
+5. Report: requirement ID, files changed, checks passed.
+6. Stop. Do not start the next task on your own.
+
+## Never
+- Never build anything not traceable to a requirement ID.
+- Never refactor unrelated code while fixing something.
+- Never leave placeholder text, dead code, or an unowned TODO in a delivered file.
+- Never log a secret.
+- Never report a task done without running it.`,
+
+"docs/SPEC.md":()=>
+`# Spec — ${NAME()}
+
+What and why. No implementation detail: technology decisions live in TECH_STACK.md.
+
+## Summary
+${liner()}
+
+## Users
+${bl(sel("audience"))}
+
+## Problems being solved
+${bl(sel("problems"))}
+
+## User stories
+${sel("v1").map(f=>"- As a "+primaryRole()+", I want "+f.charAt(0).toLowerCase()+f.slice(1)+", so that the work does not depend on phone calls or paper.").join("\n")||"- TBD"}
+
+## Acceptance scenarios
+### Primary flow
+${sel("flow").map((s,i)=>(i===0?"**Given** ":"**And** ")+s.charAt(0).toLowerCase()+s.slice(1)).join("\n")}
+**Then** the result is stored and visible to the people who are allowed to see it.
+
+### Every screen
+**Given** any screen in USER_FLOWS.md
+**When** data is loading, empty, or fails
+**Then** the screen shows the matching state with a clear next action.
+
+## Out of scope
+${bl(sel("out"),"nothing excluded yet")}
+
+## Deferred to a later version
+${bl(sel("next"),"nothing deferred yet")}
+
+## Success metrics
+${bl(sel("succ"))}
+
+## Open questions
+None recorded. New ones go to ASSUMPTIONS.md, not into the code.`,
+
+"docs/REQUIREMENTS.md":()=>{
+ const R=reqs();
+ return `# Requirements — ${NAME()}
+
+Every requirement has an ID. Every commit names the ID it serves. Nothing gets built without one.
+
+## Default acceptance criteria
+These apply to every requirement below and are not repeated per item:
+${bl(sel("dod"))}
+
+## Requirements
+| ID | Priority | Requirement |
+| --- | --- | --- |
+${R.map(r=>"| "+r.id+" | "+r.p+" | "+r.s+" |").join("\n")}
+
+## Traceability
+- \`Must\` items are the v1 scope in SPEC.md.
+- \`Later\` items must not appear in the code, not even stubbed or feature-flagged.
+- When a requirement changes, update this file first, then the code.
+
+## Verification
+Each requirement is verified by the matching check in ACCEPTANCE.md. A requirement with no way to verify it is not a requirement — rewrite it.`;
+},
+
+"docs/PRD.md":()=>
+`# PRD — ${NAME()}
+
+## One-liner
+${liner()}
+
+## Platform
+${one("platform")}
+
+## Target users
+${bl(sel("audience"))}
+
+## Scope — v1
+${bl(sel("v1"))}
+
+## Later — do not build now
+${bl(sel("next"),"nothing deferred")}
+
+## Never build
+${bl(sel("out"),"nothing excluded")}
+
+## Success metrics
+${bl(sel("succ"))}
+
+## Rules
+- Build only what is in "Scope — v1", tracked by ID in REQUIREMENTS.md.
+- A feature is not done until it passes ACCEPTANCE.md.
+- Scope changes are written here before they are written in code.`,
+
+"docs/TECH_STACK.md":()=>
+`# Tech Stack — ${NAME()}
+
+Locked. Do not swap a library or a service without asking first.
+
+| Area | Decision |
+| --- | --- |
+| Stack | ${one("stack")} |
+| Hosting | ${one("hosting")} |
+| State management | ${one("state")} |
+| UI language | ${one("langs")} |
+| Package manager | ${one("pkg")} |
+| Environments | ${one("envs")} |
+
+## Authentication
+${bl(sel("auth"))}
+
+## Required integrations
+${bl(sel("integ"))}
+
+## Constraints
+${bl(sel("constraints"))}
+
+## Rules
+- Do not add a dependency that is not required by a requirement ID.
+- Pin versions. Never bump a major version as a side effect of another task.
+- Prefer the platform's built-in solution before adding a package.
+- Proposing a package means: name, why, size, and what it replaces. Then wait.`,
+
+"docs/DATA_MODEL.md":()=>
+`# Data Model — ${NAME()}
+
+## Conventions
+- Tables plural snake_case; columns snake_case.
+- Every table has \`id\` (uuid, pk) and \`created_at\` (timestamptz, default now()).
+- Foreign keys named \`<table_singular>_id\`.
+- Money stored as integer minor units. Never float.
+- Timestamps stored in UTC.
+
+## Ownership
+${one("tenancy")}
+
+## Roles
+${bl(sel("roles"))}
+
+## Access control
+${one("rls")}
+
+## File storage
+${one("storage")}
+
+## Change tracking
+${one("audit")}
+
+## Tables
+${sel("ent").map(e=>{const i=e.indexOf(":");return i<0?"### "+e:"### "+e.slice(0,i)+"\n- "+e.slice(i+1).trim();}).join("\n\n")||"- TBD"}
+
+## Rules
+- Every schema change is a new migration. Never edit an applied migration.
+- Never drop or rename a column without an explicit instruction.
+- The access policy ships in the same migration as the table it protects.
+- Index every foreign key and every column used to filter or sort.`,
+
+"docs/USER_FLOWS.md":()=>
+`# User Flows — ${NAME()}
+
+## Entry
+${one("entry")}
+
+## Navigation
+${one("nav")}
+
+## Screens
+${bl(sel("scr"))}
+
+## Primary flow
+${nl(sel("flow"))}
+
+## Screen states
+${one("states")}
+
+## Notifications
+${bl(sel("notify"),"no notifications in v1")}
+
+## Rules
+- Build one screen end to end before starting the next.
+- No dead ends: every screen has a way back and one clear next action.
+- Every action that can fail says what went wrong and what to do about it.
+- Destructive actions confirm first.
+- Do not invent screens that are not listed here.`,
+
+"docs/DESIGN_SYSTEM.md":()=>
+`# Design System — ${NAME()}
+
+## Tokens
+| Token | Value |
+| --- | --- |
+| color.primary | ${pal()[0]} |
+| color.accent | ${pal()[1]} |
+| radius.default | ${rad()} |
+| spacing.scale | 4, 8, 12, 16, 24, 32, 48 |
+| font.arabic | ${one("font_ar")} |
+| font.latin | Inter, system-ui |
+
+## Direction
+${one("mood")}
+
+## Theme
+${one("theme")}
+
+## Density
+${one("density")}
+
+## Type scale
+| Role | Size / Weight |
+| --- | --- |
+| Display | 28 / 700 |
+| Title | 20 / 600 |
+| Body | 15 / 400 |
+| Caption | 13 / 400 |
+
+## Semantic colors
+Success, warning and danger are separate from the accent and never reuse it.
+
+## Rules
+- Define these tokens once in a theme file. Never hardcode a color, radius or spacing value in a component.
+- Text contrast is at least 4.5:1 against its background.
+- Minimum touch target 44 x 44.
+- ${one("langs").indexOf("Arabic only")===0?"RTL first. Use start/end, never left/right. Check every screen in Arabic before calling it done.":"Support RTL and LTR by using start/end instead of left/right."}
+- Latin digits unless told otherwise.
+- One icon set across the whole product.`,
+
+"docs/SECURITY.md":()=>
+`# Security — ${NAME()}
+
+## Secrets
+${one("secrets")}
+- No key, token, URL or password is ever committed, logged, or shown in an error message.
+- \`.env\` is git-ignored. \`.env.example\` lists variable names with empty values.
+
+## Authentication
+${bl(sel("auth"))}
+- ${one("session")}
+- Signing out clears cached data on the device.
+
+## Authorization
+- ${one("rls")}
+- Roles: ${sel("roles").join(", ")||"TBD"}
+- Permission is checked on the server for every write. Hiding a button is not a permission check.
+
+## Sensitive data stored
+${bl(sel("pii"),"none")}
+- Collect only what a requirement needs. Nothing extra.
+
+## Abuse protection
+${one("ratelimit")}
+- All input is validated on the server, never trusted from the client.
+
+## Rules
+- Never disable TLS verification.
+- Never write a raw SQL string built from user input.
+- Never return another user's row because of a missing filter — the policy, not the query, is the guard.
+- Report any secret found in the repository immediately and stop.`,
+
+"docs/ENV_SETUP.md":()=>{
+ const F=isFlutter();
+ const vars=isSupa()?["SUPABASE_URL","SUPABASE_ANON_KEY","SUPABASE_SERVICE_ROLE_KEY (server only)"]
+      :isFire()?["FIREBASE_API_KEY","FIREBASE_PROJECT_ID","FIREBASE_APP_ID"]
+      :["DATABASE_URL","APP_SECRET"];
+ const pm=one("pkg");
+ const cmds=F?["flutter pub get","flutter run","flutter analyze","flutter test","flutter build apk --release"]
+   :pm==="composer"?["composer install","php artisan migrate","php artisan serve","php artisan test"]
+   :[pm+" install",pm+" run dev",pm+" run lint",pm+" test",pm+" run build"];
+ return `# Environment Setup — ${NAME()}
+
+## Requirements
+${F?"- Flutter stable channel\n- Android Studio or Xcode for device builds":"- Node.js LTS\n- "+pm}
+${isSupa()?"- Supabase CLI for migrations":""}
+
+## Environments
+${one("envs")}
+
+## Environment variables
+${bl(vars)}
+Copy \`.env.example\` to \`.env\` and fill it in. Never commit \`.env\`.
+
+## Commands
+\`\`\`bash
+${cmds.join("\n")}
+\`\`\`
+
+## First run checklist
+1. Install dependencies.
+2. Copy and fill the environment file.
+3. ${isSupa()?"Apply migrations to a local or branch database.":"Set up the database and run migrations."}
+4. Run the app and confirm the login screen loads.
+5. Sign in with a test account and reach the home screen.
+
+## Rules
+- Never run a destructive command against production.
+- Every new environment variable is added to \`.env.example\` and to this file in the same commit.`;
+},
+
+"docs/BUILD_ORDER.md":()=>{
+ let t=0; const T=()=>"T-"+String(++t).padStart(3,"0");
+ const p1=[T()+" Initialize the project and commit a running empty app.",
+  T()+" Add the theme file with the DESIGN_SYSTEM.md tokens.",
+  T()+" Set up the environment file and the client for "+(isSupa()?"Supabase":isFire()?"Firebase":"the database")+"."];
+ const p2=["Auth: "+sel("auth").join(", ")].map(x=>T()+" "+x)
+  .concat([T()+" Session handling and sign-out that clears cached data.",T()+" Role checks for: "+(sel("roles").join(", ")||"TBD")+"."]);
+ const p3=sel("ent").map(e=>T()+" Table + access policy: "+e.split(":")[0]+".");
+ const p4=sel("v1").map(f=>T()+" "+f+".");
+ const p5=[T()+" Empty, loading and error states on every screen.",
+  T()+" Arabic RTL pass over every screen.",
+  T()+" Run every check in ACCEPTANCE.md and report the results."];
+ return `# Build Order — ${NAME()}
+
+Work top to bottom. ${one("chunk")}
+
+## Phase 1 — Foundation
+${p1.join("\n")}
+
+## Phase 2 — Access
+${p2.join("\n")}
+
+## Phase 3 — Data
+${p3.join("\n")}
+
+## Phase 4 — Features (v1 scope, in this order)
+${p4.join("\n")}
+
+## Phase 5 — Ship readiness
+${p5.join("\n")}
+
+## Rules
+- Do not start a phase before the one above it passes its checks.
+- Each task references the requirement ID it satisfies.
+- If a task turns out to need more than one sitting, split it and say so before starting.
+- Target: ${one("launch")}.`;
+},
+
+"docs/ACCEPTANCE.md":()=>
+`# Acceptance — ${NAME()}
+
+## Definition of done
+A feature is done only when all of these are true:
+${bl(sel("dod"))}
+- It satisfies its requirement ID in REQUIREMENTS.md.
+- It uses DESIGN_SYSTEM.md tokens, not hardcoded values.
+
+## Performance target
+${one("perf")}
+
+## Must-pass checks
+${bl(sel("must"))}
+
+## Target devices
+${bl(sel("devices"))}
+
+## Timeline
+${one("launch")}
+
+## Reporting format
+| Check | Result | Note |
+| --- | --- | --- |
+| name of the check | pass / fail | what was fixed if it failed |
+
+## Rules
+- Run the app and verify yourself before reporting anything done.
+- A failing check is fixed before the next task starts.
+- Never report "should work". Report only what was actually run.`,
+
+"docs/ASSUMPTIONS.md":()=>
+`# Assumptions — ${NAME()}
+
+Every decision made without asking goes here, in one line, the moment it is made. This file is how a missing answer becomes a visible one.
+
+| # | Date | Decision made | Why | Affects |
+| --- | --- | --- | --- | --- |
+| 1 | | | | |
+
+## Rules
+- Log it before writing the code that depends on it, not after.
+- One row per decision. Link the requirement ID it affects.
+- Anything in this file can be overruled later — do not build on it as if it were settled.
+- Review this file before each release.`
+};
+Object.assign(FILES,{
+"README.md":()=>
+`# ${NAME()}
+
+${liner()}
+
+## Repository map
+| Path | What it decides |
+| --- | --- |
+| \`CLAUDE.md\` | How the agent works: rules, limits, context protocol |
+| \`PROGRESS.md\` | Live state: done, current, next. Read this first every session |
+| \`docs/SPEC.md\` | What is being built and why |
+| \`docs/REQUIREMENTS.md\` | Numbered requirements, REQ-### |
+| \`docs/PRD.md\` | Scope boundaries |
+| \`docs/TECH_STACK.md\` | Locked technology decisions |
+| \`docs/DATA_MODEL.md\` | Tables, roles, access |
+| \`docs/API.md\` | How the client reaches the data |
+| \`docs/STATE_MACHINE.md\` | Allowed status transitions |
+| \`docs/USER_FLOWS.md\` | Screens and paths |
+| \`docs/DESIGN_SYSTEM.md\` | Tokens and visual rules |
+| \`docs/COPY_AR.md\` | Every user-facing string |
+| \`docs/SECURITY.md\` | Secrets, sessions, permissions |
+| \`docs/ENV_SETUP.md\` | How to run it |
+| \`docs/BUILD_ORDER.md\` | Phases and tasks, T-### |
+| \`docs/ACCEPTANCE.md\` | Definition of done |
+| \`docs/ASSUMPTIONS.md\` | Decisions made without asking |
+
+## Stack
+${one("stack")} — deployed on ${one("hosting")}.
+
+## Run it
+See \`docs/ENV_SETUP.md\`.
+
+## First command for an AI agent
+\`\`\`
+Read CLAUDE.md and PROGRESS.md. Then do the task under "Now".
+\`\`\``,
+
+"PROGRESS.md":()=>
+`# Progress — ${NAME()}
+
+This file is the project's memory. Read it first, update it last, every single task.
+Do not re-read the whole \`docs/\` folder to find out where things stand — it is written here.
+
+## Now
+- Phase: 1 — Foundation
+- Task: T-001 — Initialize the project and commit a running empty app
+- Requirement: REQ-001
+- Status: not started
+
+## Next
+- T-002 — Add the theme file with DESIGN_SYSTEM.md tokens
+- T-003 — Set up the environment file and the ${isSupa()?"Supabase":isFire()?"Firebase":"database"} client
+
+## Done
+| Task | Requirement | Files touched | Date |
+| --- | --- | --- | --- |
+| — | — | — | — |
+
+## Blocked
+Nothing.
+
+## Read list for this phase
+- \`docs/BUILD_ORDER.md\` — Phase 1 only
+- \`docs/TECH_STACK.md\`
+- \`docs/ENV_SETUP.md\`
+- \`docs/DESIGN_SYSTEM.md\`
+
+## Update rules
+- One line per finished task in Done, with the files touched. No prose.
+- Move the next task from Next into Now, and pull a new one from BUILD_ORDER.md into Next.
+- Replace the Read list when the phase changes, so the next session opens four files, not twenty.
+- Anything decided without asking goes to \`docs/ASSUMPTIONS.md\`, not here.`,
+
+"docs/API.md":()=>{
+ const mode=one("api"), ents=sel("ent").map(e=>e.split(":")[0].trim());
+ let body;
+ if(mode.indexOf("directly")>-1){
+  body="The client reads and writes tables through the SDK. Row level security is the API contract — there is no other guard.\n\n| Table | Client may read | Client may write |\n| --- | --- | --- |\n"+
+   ents.map(e=>"| "+e+" | rows the policy allows | only its own rows |").join("\n")+
+   "\n\n## Server functions (required)\nOperations that must not be trusted to the client:\n"+
+   bl(sel("v1").filter(f=>/confirm|place|assign|approve|close|checkout|order|enroll|submit/i.test(f)).map(f=>f+" — runs server-side, validates input, then writes."),"none identified yet");
+ } else if(mode.indexOf("server functions")>-1){
+  body="The client never touches a table. Every operation is a function call.\n\n| Function | Input | Does |\n| --- | --- | --- |\n"+
+   sel("v1").map(f=>"| "+f.toLowerCase().replace(/[^a-z0-9]+/g,"_").slice(0,28)+" | validated payload | "+f+" |").join("\n");
+ } else {
+  const rest=mode.indexOf("GraphQL")>-1;
+  body=rest?"A single GraphQL endpoint. One query or mutation per entity, permissions resolved server-side.\n\n| Type | Operations |\n| --- | --- |\n"+ents.map(e=>"| "+e+" | list, byId, create, update, delete |").join("\n")
+   :"| Method | Path | Does |\n| --- | --- | --- |\n"+ents.map(e=>"| GET | /api/"+e+" | list with filters and pagination |\n| GET | /api/"+e+"/:id | one record |\n| POST | /api/"+e+" | create |\n| PATCH | /api/"+e+"/:id | update |\n| DELETE | /api/"+e+"/:id | delete |").join("\n");
+ }
+ return `# API — ${NAME()}
+
+## Access pattern
+${mode}
+
+${body}
+
+## Conventions
+- Errors return a machine code and a human message. The client shows the message, logs the code.
+- Lists are paginated. Never return an unbounded list.
+- Timestamps are ISO 8601 in UTC.
+- Money is an integer in minor units.
+
+## Rules
+- Permission is decided on the server, every time. A hidden button is not a permission check.
+- Validate every input server-side even when the client already validated it.
+- Never add an endpoint that is not needed by a requirement ID.`;
+},
+
+"docs/STATE_MACHINE.md":()=>{
+ const c=chain(), L=c.live.map(skey), T=c.term.map(skey);
+ let rows=[];
+ for(let i=0;i<L.length-1;i++) rows.push("| "+L[i]+" | "+L[i+1]+" | forward |");
+ L.slice(0,-1).forEach(f=>T.forEach(t=>rows.push("| "+f+" | "+t+" | terminal |")));
+ return `# State Machine — ${NAME()}
+
+The main record moves through these states and no others.
+
+## States
+| State | Meaning |
+| --- | --- |
+${sel("st").map(x=>"| "+skey(x)+" | "+x.split("—").slice(1).join("—").trim()+" |").join("\n")||"| TBD | TBD |"}
+
+## Allowed transitions
+| From | To | Kind |
+| --- | --- | --- |
+${rows.join("\n")||"| TBD | TBD | TBD |"}
+
+Terminal states (${T.join(", ")||"none"}) have no outgoing transition.
+
+## Rules
+- The status column only ever changes through a function that checks this table. Never with a direct update from a screen.
+- A transition that is not in this table is rejected with a clear error, not silently ignored.
+- Every transition writes who did it and when.
+- Adding a state means editing this file first, then the code.`;
+},
+
+"docs/COPY_AR.md":()=>
+`# Interface Copy — ${NAME()}
+
+Every user-facing string lives in one file in the code and is referenced by key. No string is written inline in a screen, and no string is invented by the agent — if a key is missing, add it here first.
+
+## Screens
+| Key | Arabic | English |
+| --- | --- | --- |
+${pairsOf("scr").map(x=>"| screen."+x.v.split("—")[0].trim().toLowerCase().replace(/[^a-z0-9]+/g,"_")+" | "+x.l+" | "+x.v.split("—")[0].trim()+" |").join("\n")||"| — | — | — |"}
+
+## Statuses
+| Key | Arabic | English |
+| --- | --- | --- |
+${pairsOf("st").map(x=>"| status."+skey(x.v)+" | "+x.l.split("—")[0].trim()+" | "+skey(x.v)+" |").join("\n")||"| — | — | — |"}
+
+## Common
+| Key | Arabic | English |
+| --- | --- | --- |
+${arabicUI.map(r=>"| "+r[0]+" | "+r[1]+" | "+r[2]+" |").join("\n")}
+
+## Rules
+- Keys are lowercase with dots. Never reuse a key for a different meaning.
+- ${one("langs")}
+- An error message says what happened and what to do next. It does not apologise and it is never vague.
+- A button and the message it produces use the same verb.
+- Latin digits everywhere unless told otherwise.`,
+
+".env.example":()=>{
+ const v=isSupa()?["SUPABASE_URL=","SUPABASE_ANON_KEY=","SUPABASE_SERVICE_ROLE_KEY="]:isFire()?["FIREBASE_API_KEY=","FIREBASE_PROJECT_ID=","FIREBASE_APP_ID="]:["DATABASE_URL=","APP_SECRET="];
+ const ex=[];
+ if(sel("integ").indexOf("Push notifications")>-1) ex.push("PUSH_SERVER_KEY=");
+ if(sel("integ").indexOf("Maps and location")>-1) ex.push("MAPS_API_KEY=");
+ if(sel("integ").indexOf("Transactional email")>-1) ex.push("SMTP_URL=");
+ return `# Copy to .env and fill in. Never commit .env.
+APP_ENV=local
+${v.concat(ex).join("\n")}`;
+},
+
+".gitignore":()=>{
+ const F=isFlutter();
+ return (F?`.dart_tool/
+.packages
+build/
+*.g.dart
+*.freezed.dart
+ios/Pods/
+android/local.properties
+android/key.properties
+*.keystore
+*.jks`:`node_modules/
+.next/
+dist/
+build/
+coverage/
+*.tsbuildinfo`)+`
+
+.env
+.env.*
+!.env.example
+.DS_Store
+*.log`;
+}
+});
+const SHARED=`
+## Shared rules — apply to every document
+- Build only what has a requirement ID.
+- New migration per schema change; never edit an applied one.
+- Permission and validation on the server, every write.
+- Secrets never in repo, logs or errors.
+- Tokens not hardcoded values; string keys not literals.
+- Every screen: loading, empty, error.
+- Status changes go through the state machine.
+- Nothing is done until it was run.
+- Unasked decisions → ASSUMPTIONS.md, immediately.`;
+function briefen(n,t){
+  if(!brief()) return t;
+  if(n!=="CLAUDE.md"&&n!=="PROGRESS.md") t=t.replace(/\n## Rules[^\n]*\n[\s\S]*?(?=\n## |$)/g,"\n");
+  if(n==="CLAUDE.md") t=t+"\n"+SHARED;
+  t=t.replace(/^> .*$/gm,"");
+  t=t.replace(/^(# [^\n]*\n)(?:(?!#)[^\n]*\n)*/,"$1");
+  if(n==="docs/COPY_AR.md") t=t.replace(/\n## Common\n[\s\S]*?(?=\n## |$)/,"\n");
+  if(n==="docs/REQUIREMENTS.md") t=t.replace(/The system shall provide: /g,"").replace(/\| Must \|/g,"| M |").replace(/\| Later \|/g,"| L |");
+  if(n==="docs/SPEC.md") t=t.replace(/\n## User stories\n[\s\S]*?(?=\n## )/,"\n## User stories\nOne per Must requirement in REQUIREMENTS.md. Not repeated here.\n");
+  return t.replace(/\n{3,}/g,"\n\n").trim()+"\n";
+}
+const gen=(n)=>briefen(n,FILES[n]());
+const tok=(t)=>Math.round(t.length/3.6);
+const FULL=["README.md","CLAUDE.md","PROGRESS.md","docs/SPEC.md","docs/REQUIREMENTS.md","docs/PRD.md","docs/TECH_STACK.md","docs/DATA_MODEL.md","docs/API.md","docs/STATE_MACHINE.md","docs/USER_FLOWS.md","docs/DESIGN_SYSTEM.md","docs/COPY_AR.md","docs/SECURITY.md","docs/ENV_SETUP.md","docs/BUILD_ORDER.md","docs/ACCEPTANCE.md","docs/ASSUMPTIONS.md",".env.example",".gitignore"];
+let ORDER=FULL.slice();
+function setOrder(){ORDER=brief()?FULL.filter(n=>n!=="docs/PRD.md"):FULL.slice();}
+setOrder();
+
+/* ============ CHECK ============ */
+function findings(){
+  const F=[], add=(h,m,g)=>F.push({h:h,m:m,g:g});
+  const entT=sel("ent").join(" ").toLowerCase(), v1T=sel("v1").join(" ").toLowerCase(),
+        outT=sel("out").join(" ").toLowerCase(), integ=sel("integ"), auth=sel("auth"), roles=sel("roles");
+  const hasI=(k)=>integ.some(x=>x.toLowerCase().indexOf(k)>-1);
+  if(!V.app_name) add(1,"المشروع بلا اسم — كل ملف راح يطلع باسم عام.",0);
+  if(!sel("v1").length) add(1,"ما اخترت أي ميزة للنسخة الأولى، فملف المتطلبات راح يطلع فارغ.",1);
+  if(!sel("ent").length) add(1,"ما اخترت أي جدول، فملف قاعدة البيانات راح يطلع فارغ.",3);
+  if(!sel("scr").length) add(2,"ما اخترت شاشات — ملف المسارات راح يكون ناقص.",4);
+  if(!sel("st").length) add(2,"ما اخترت حالات للسجل الرئيسي، فمخطط الانتقالات راح يطلع فارغ.",3);
+  if(outT.indexOf("payment")>-1 && (hasI("payment")||v1T.indexOf("payment")>-1))
+    add(1,"الدفع الإلكتروني موجود بالميزات أو الخدمات، وبنفس الوقت محطوط بخارج النطاق.",2);
+  if(sel("notify").length && !hasI("push"))
+    add(1,"اخترت إشعارات للمستخدم، لكن خدمة الإشعارات مو مفعّلة بورقة التقنيات.",2);
+  if(hasI("offline") && entT.indexOf("sync")<0 && entT.indexOf("queue")<0)
+    add(2,"اخترت العمل بدون إنترنت، وما يوجد جدول للمزامنة أو طابور العمليات المعلّقة.",3);
+  if(roles.indexOf("driver")>-1 && entT.indexOf("driver")<0)
+    add(2,"دور السائق مختار، وما يوجد عمود أو جدول يربط السائق بالسجلات.",3);
+  if(entT.indexOf("driver_id")>-1 && roles.indexOf("driver")<0)
+    add(1,"الجداول تشير إلى driver_id، ودور السائق مو مختار بالأدوار.",3);
+  if(roles.indexOf("technician")>-1 && entT.indexOf("assigned_to")<0 && entT.indexOf("technician")<0)
+    add(2,"دور الفني مختار، وما يوجد عمود إسناد بالجداول.",3);
+  if(one("storage").indexOf("No file")===0 && (hasI("image")||entT.indexOf("image_url")>-1||entT.indexOf("attach")>-1))
+    add(1,"تخزين الملفات مطفي، لكن فيه رفع صور أو مرفقات بالميزات أو الجداول.",3);
+  if(hasI("maps") && entT.indexOf("lat")<0)
+    add(2,"اخترت الخرائط والموقع، وما يوجد عمود إحداثيات بالجداول.",3);
+  if(auth.some(x=>x.indexOf("Phone")===0) && entT.indexOf("phone")<0)
+    add(2,"الدخول برقم الهاتف مختار، وما يوجد عمود phone بجدول المستخدمين.",3);
+  if(hasI("excel") && v1T.indexOf("export")<0)
+    add(2,"خدمة التصدير مفعّلة، وما يوجد ميزة تصدير بالنسخة الأولى.",1);
+  if(auth.some(x=>x.indexOf("Guest")===0) && one("entry").indexOf("Splash")===0)
+    add(2,"سمحت بالتصفح كزائر، ومسار البداية يجبر المستخدم على تسجيل الدخول أولاً.",4);
+  const st=one("state"), fl=isFlutter();
+  if(fl && /Zustand|Redux/.test(st)) add(1,"اخترت Flutter مع مكتبة حالة خاصة بـ JavaScript.",2);
+  if(!fl && /Riverpod|Provider|Bloc/.test(st)) add(1,"اخترت مكتبة حالة خاصة بـ Flutter مع ستاك غير Flutter.",2);
+  if(fl && one("pkg").indexOf("pub")<0) add(2,"مدير الحزم لا يطابق Flutter.",7);
+  if(!fl && one("pkg").indexOf("pub")===0) add(2,"مدير الحزم pub خاص بـ Flutter، والستاك غير Flutter.",7);
+  if(one("platform").indexOf("Mobile app (")===0 && /Vercel|Netlify/.test(one("hosting")))
+    add(2,"المنتج تطبيق موبايل فقط، والاستضافة مخصصة للويب.",2);
+  if(one("langs").indexOf("Arabic only")===0 && !sel("dod").some(x=>x.indexOf("RTL")>-1))
+    add(2,"الواجهة عربية بالكامل، وما يوجد فحص RTL ضمن شروط الإنجاز.",8);
+  if(one("tests").indexOf("No automated")===0 && sel("dod").some(x=>x.indexOf("Linter")>-1))
+    add(2,"ألغيت الاختبارات، وشرط الإنجاز يطلب مرور أدوات الفحص.",6);
+  return F;
+}
+function renderCheck(){
+  const F=findings(), hard=F.filter(x=>x.h===1).length;
+  card.innerHTML='<div class="card"><div class="card-h"><h2>فحص التناقضات</h2><p>'+
+    (F.length?hard+" تعارض و "+(F.length-hard)+" تنبيه":"لا يوجد تعارض")+'</p></div><div class="card-b">'+
+    (F.length?F.map(f=>'<div class="fi '+(f.h===1?"hard":"soft")+'"><span class="ic">'+(f.h===1?"!":"?")+
+      '</span><p>'+f.m+'</p><button class="go" type="button" data-g="'+f.g+'">'+S[f.g].t+'</button></div>').join("")
+     :'<div class="clean"><div class="ok">✓</div><p>ما لكيت تعارض بين إجاباتك.</p></div>')+
+    '</div><div class="bar"><button class="btn g" id="bk" type="button">السابق</button>'+
+    '<button class="btn p" id="nx" type="button">توليد '+ORDER.length+' ملف</button>'+
+    '<span class="fill">قبل التوليد</span></div></div>';
+  card.querySelectorAll("[data-g]").forEach(b=>b.onclick=()=>{sheet=+b.dataset.g;render();});
+  document.getElementById("bk").onclick=()=>{sheet=S.length-1;render();};
+  document.getElementById("nx").onclick=()=>{sheet=S.length+1;render();};
+}
+
+/* ============ OUTPUT ============ */
+function allText(){return ORDER.map(n=>"===== "+n+" =====\n\n"+gen(n)).join("\n\n\n");}
+function totalTok(){return ORDER.reduce((a,n)=>a+tok(gen(n)),0);}
+function renderOut(){
+  const nm=tab<ORDER.length?ORDER[tab]:null;
+  const body=nm?gen(nm):allText();
+  let list="", grp="";
+  ORDER.concat(["ALL FILES"]).forEach((n,i)=>{
+    const g=n.indexOf("docs/")===0?"docs":(n==="ALL FILES"?"الكل":"root");
+    if(g!==grp){list+='<div class="grp">'+g+'</div>';grp=g;}
+    list+='<button type="button" data-t="'+i+'"'+(i===tab?' aria-current="true"':'')+'>'+E(n.replace("docs/",""))+'</button>';
+  });
+  card.innerHTML='<div class="card"><div class="out"><div class="olist">'+list+'</div>'+
+    '<div class="opane"><div class="ohead"><span class="fn">'+E(nm||"all-files.txt")+'</span>'+
+    '<span style="display:flex;gap:8px"><button class="btn p" id="cp" type="button">نسخ</button>'+
+    '<button class="btn g" id="ed" type="button">تعديل</button></span></div>'+
+    '<pre class="out">'+E(body)+'</pre></div></div>'+
+    '<div class="panel"><h4>التركيب</h4><ol>'+
+    '<li><code>CLAUDE.md</code> و <code>README.md</code> و <code>PROGRESS.md</code> بجذر المشروع.</li>'+
+    '<li>بقية الملفات داخل مجلد <code>docs/</code>.</li>'+
+    '<li>أول أمر: <code>Read CLAUDE.md and PROGRESS.md, then start the task under Now</code></li>'+
+    '</ol></div>'+
+    '<div class="panel" id="iop" hidden><h4>ملف المشروع</h4><p>انسخ النص واحفظه. الصقه بأي جهاز واضغط استيراد لترجع كل إجاباتك.</p>'+
+    '<textarea class="io" id="iot"></textarea><div style="display:flex;gap:8px;margin-top:9px">'+
+    '<button class="btn p" id="iocp" type="button">نسخ</button><button class="btn g" id="ioim" type="button">استيراد</button></div></div>'+
+    '<div class="bar"><div class="seg"><button type="button" data-b="1"'+(brief()?' aria-current="true"':'')+'>مختصر</button>'+
+    '<button type="button" data-b="0"'+(brief()?'':' aria-current="true"')+'>كامل</button></div>'+
+    '<button class="btn g" id="io" type="button">حفظ / استيراد</button>'+
+    '<button class="btn g" id="rs" type="button">مسح الكل</button>'+
+    '<span class="fill">'+ORDER.length+' ملف · ~'+totalTok().toLocaleString("en")+' توكن</span></div></div>';
+
+  card.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{tab=+b.dataset.t;renderOut();});
+  card.querySelectorAll("[data-b]").forEach(b=>b.onclick=()=>{V.brief=b.dataset.b==="1";setOrder();if(tab>ORDER.length)tab=ORDER.length;save();renderOut();});
+  document.getElementById("cp").onclick=()=>copy(body);
+  document.getElementById("ed").onclick=()=>{sheet=S.length-1;render();};
+  const iop=document.getElementById("iop"), iot=document.getElementById("iot");
+  document.getElementById("io").onclick=()=>{iop.hidden=!iop.hidden; if(!iop.hidden){iot.value=JSON.stringify(V);iot.focus();}};
+  document.getElementById("iocp").onclick=()=>copy(iot.value);
+  document.getElementById("ioim").onclick=()=>{
+    try{const d=JSON.parse(iot.value); if(!d||typeof d!=="object"||!d.kind)throw 0;
+      V=d; initDefaults(false); save(); sheet=0; tab=0; render();
+    }catch(e){ alert("النص مو صحيح — تأكد أنك نسخته كامل."); }
+  };
+  document.getElementById("rs").onclick=()=>{
+    if(!confirm("مسح كل الإجابات والبدء من جديد؟"))return;
+    try{localStorage.removeItem(KEY);}catch(e){}
+    V={kind:"store"}; initDefaults(true); resetBanks(); save(); sheet=0; tab=0; render();
+  };
+}
+
+const toast=document.getElementById("toast"); let tt;
+function copy(t){
+  const ok=()=>{toast.classList.add("show");clearTimeout(tt);tt=setTimeout(()=>toast.classList.remove("show"),1600);};
+  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok).catch(()=>fb(t,ok));
+  else fb(t,ok);
+}
+function fb(t,ok){
+  const a=document.createElement("textarea"); a.value=t; a.style.position="fixed"; a.style.opacity="0";
+  document.body.appendChild(a); a.select();
+  try{document.execCommand("copy");ok();}catch(e){toast.textContent="حدّد النص وانسخه";ok();}
+  document.body.removeChild(a);
+}
+
+function render(){renderSteps();renderTop();if(sheet===S.length)renderCheck();else if(sheet>S.length)renderOut();else renderSheet();window.scrollTo(0,0);}
+render();
+</script>
+
+</body>
+</html>
